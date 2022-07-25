@@ -33,25 +33,26 @@ h.load_file("nrngui.hoc") # load_file
 #################
 # PARAMETERS
 #################
-keepoldtypo=0 # rerun the old version of the code, including typos
+keepoldtypo=0 # 1: rerun the old version of the code, including typos
 cellClasses.keepoldtypo = keepoldtypo
-usepar = 1
+usepar = 1 # 1 - use all cores (if mpi installed), 0: run in serial
 netfcns.usepar = usepar
 printflag = 1 # 0: almost silent, 1: some prints, 2: many prints
 netfcns.printflag = printflag
 
 # Set default values for parameters that can be passed in at the command line
 plotflag = 0
-network_scale = 1 # set to 1 for full scale or 0.2 for a quick test with a small network
+network_scale = 0.2 # set to 1 for full scale or 0.2 for a quick test with a small network
 scaleEScon = 1 # scaling factor for number of excitatory connections in the network, should be set to 1
 
-numCycles = 6 # set to 2 for a short test network or 8 for a full simulation
+numCycles = 2 # set to 2 for a short test network or 8 for a full simulation
 simname="guitar"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
 
 netfile = 'N100S20P5'
 electrostim = 0 # 0 = no stimulation, 1 = stimulation according to parameters set farther down in code
 percentDeath = .0 # fraction of pyramidal cells to kill off
+                  # to represent a disease state
 
 
 # Check for parameters being passed in via the command line
