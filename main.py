@@ -42,16 +42,17 @@ netfcns.printflag = printflag
 
 # Set default values for parameters that can be passed in at the command line
 plotflag = 0
-network_scale = 0.2 # set to 1 for full scale or 0.2 for a quick test with a small network
+network_scale = 1 # set to 1 for full scale or 0.2 for a quick test with a small network
 scaleEScon = 1 # scaling factor for number of excitatory connections in the network, should be set to 1
 
-numCycles = 2 # set to 2 for a short test network or 8 for a full simulation
+numCycles = 8 # set to 2 for a short test network or 8 for a full simulation
 simname="guitar"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
 
-netfile = 'N100S20P5'
+netfile = 'N100S20P5'   # the memory pattern file to use
+                        # N[# pyr cells]S[# active cells per pattern]P[# patterns included]
 electrostim = 0 # 0 = no stimulation, 1 = stimulation according to parameters set farther down in code
-percentDeath = .0 # fraction of pyramidal cells to kill off
+percentDeath = .01 # fraction of pyramidal cells to kill off
                   # to represent a disease state
 
 
@@ -87,6 +88,11 @@ fstem = "pyresults/" + simname
 from model_const import *
 from connprops import *
 
+# calculate how many cells should
+# participate in a memory pattern
+# taking into account network scale
+# (20 cells in a full size network
+# with a linear scale down)
 SPATT = calcSPATT(network_scale)
 
 SIMDUR = STARTDEL + (THETA*numCycles)    # simulation duration (msecs)
@@ -220,6 +226,8 @@ pc.barrier() # wait for all cores to get to this point before continuing
 # SET STIMULATION
 #################
 
+# set the background activity for each of the upstream
+# cells (entorhinal cortical, CA3, and medial septum)
 netfcns.mkinputs(cells, ranlist, pop_by_name, pc)
 
 #%%
@@ -237,8 +245,8 @@ SPATT = 20*network_scale    # number of active cells per pattern
 NPATT = 5    # number of stored patterns
 NSTORE = 5    # number of new patterns to store
 
-CPATT = 1    # index of cue pattern
-CFRAC = 1    # fraction of active cells in cue
+CPATT = 1    # index of cue pattern to use for stimulation
+CFRAC = 1    # fraction of active cells to use in the stimulation cue
 
 
 # file name of connection weights and patterns
@@ -356,9 +364,27 @@ for conn in connlist:
     #    print("newtar starts with ", pop_by_name[conn.popname].gidst, " and pre starts with ", pop_by_name[conn.prepop].gidst , " and conns made = ", conn.connsMade)
 
 #netfcns.mkinputs(cells, pop_by_name['CA3Cell'].gidst, pop_by_name['ECCell'].gidst, pop_by_name['SEPCell'].gidst, ntot, pop_by_name)
+
+
 # EC input to PCs
+# for each pyramidal cell in the pattern (in FPATT)
+# that should be active (1, not 0), connect all the
+# EC cells to that pyramidal cell
 ncelist = netfcns.connectEC(FPATT, ECPATT, NPATT, E_EC, 2, cells,  pop_by_name, pc)	#  restore existing pattern
+
 # CA3 input to PCs
+# if C_P is 1, then all CA3 cells
+# connect to all pyramidal cells.
+# If lower than 1, then some connections
+# will not be made.
+# The weights of the connections depends
+# on the FCONN file "Weights/wgts"+netfile+".dat"
+# In the file is a connection matrix.
+# If a given connection (intersection of a presynaptic
+# row with a postsynaptic column) has a value of 0,
+# it represents an unlearned synapse and will be given
+# a smaller weight. A value of 1 is a learned synapse
+# with a stronger weight.
 ncslist = netfcns.connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_low_start_, pc)	# with modifiable synapses
 #%%
 
@@ -366,8 +392,20 @@ ncslist = netfcns.connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, con
 # SET CUES FOR PATTERNS
 #################
 
-netfcns.mkcue(FPATT, CPATT, CFRAC, NPATT, SPATT, cells, ranlist, pop_by_name, pc)	# cue from already stored pattern
-#netfcns.mkcue(FSTORE, CPATT, CFRAC, NSTORE)	# cue from new pattern
+task = "recall"
+# set the activity of the CA3 cells;
+# cells that are part of the pattern
+# (their row set to 1 in FPATT or FSTORE
+# file) will have their activity pattern
+# adjusted so they fire in memory bursts
+if task == "recall":
+    netfcns.mkcue(FPATT, CPATT, CFRAC, NPATT, SPATT, cells, ranlist, pop_by_name, pc)	# cue from already stored pattern
+else: # "storage"
+    netfcns.mkcue(FSTORE, CPATT, CFRAC, NSTORE, SPATT, cells, ranlist, pop_by_name, pc)	# cue from new pattern
+
+# set the spiking activity of all 
+# entorhinal cortical cells using
+# some standard parameters
 netfcns.mkEC(cells, ranlist, pop_by_name, pc)
 
 #%%

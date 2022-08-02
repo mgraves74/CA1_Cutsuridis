@@ -81,7 +81,7 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc):# 
                 # create pattern stimulus
                 for j in range(int(pop_by_name["ECCell"].num)):
                     # set up connection from source to target
-                    #nc = pc.gid_connect(j+iEC, syn)
+                    # nc = pc.gid_connect(j+iEC, syn)
                     if usepar==1:
                         nc = pc.gid_connect(int(j+pop_by_name["ECCell"].gidst), syn)
                     else:
