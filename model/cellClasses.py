@@ -6,6 +6,7 @@ Created on Tue Aug  4 21:53:18 2020
 """
 keepoldtypo = 0
 
+
 from neuron import h
 
 class modelcell():
@@ -264,7 +265,7 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 10*0.00031635    # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gbar_kca = 5*0.0001       # varies depending on distance from 0.5*0.0001 to 5*0.0001
             seg.gkbar_mykca = 2*0.0165
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 0
@@ -537,8 +538,8 @@ class PyramidalCell(modelcell):
         # E0
         syn_ = h.MyExp2Syn(self.lm_thick1(0.5))
         self.pre_list.append(syn_)    # AMPA        EC
-        syn_.tau1 = 0.5
-        syn_.tau2 = 3
+        syn_.tau1 = 0.5 # rise time constant
+        syn_.tau2 = 3 # decay time constant
         syn_.e = 0
         
         # E1
@@ -707,6 +708,8 @@ class PyramidalCell(modelcell):
         syn_.tau1 = 0.5
         syn_.tau2 = 3
         syn_.e = 0
+
+
         
 class OLMCell(modelcell):
     """ OLM Cell definition """
