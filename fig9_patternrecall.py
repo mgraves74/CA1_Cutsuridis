@@ -5,6 +5,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import time 
 
 numCycles=8
 
@@ -128,7 +129,9 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(simname))
+    plt.savefig("plots/guitar" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
+    
     
     print("Overall performance metric for {}: {}".format(simname,co[co>0].mean()))
 

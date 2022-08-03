@@ -5,6 +5,8 @@ Created on Tue Aug 11 10:30:39 2020
 @author: mbezaire
 """
 
+import time
+
 runs2include=["par","sim1"]
 
 performance_list=[]
@@ -31,4 +33,6 @@ plt.xlabel('% Cell Death')
 plt.ylabel('Memory Recall Performance (Scale of 0 to 1)')
 plt.show()
 plt.savefig('Images/memory_recall_v_death.png')
+plt.savefig("plots/memory_recall_v_death" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
 
+plt.save

@@ -4,6 +4,14 @@ Created on Tue Aug  4 21:53:18 2020
 
 @author: mbezaire
 """
+class CREB_class():
+    def __init__(self, mAHP, sAHP, AMPA, NMDA):
+        self.mAHP = mAHP
+        self.sAHP = sAHP
+        self.AMPA = AMPA
+        self.NMDA = NMDA
+    
+
 keepoldtypo = 0
 
 from neuron import h
@@ -183,15 +191,15 @@ class PyramidalCell(modelcell):
         self.soma.insert("cal") # HVA Ca++-L type current
         self.soma.insert("cat") # LVA Ca++-T type current
         self.soma.insert("somacar") # HVAm Ca++-R type current
-        self.soma.insert("kca") # K(Ca) sAHP potassium type current
-        self.soma.insert("mykca") # medium AHP K++ current (BPG)
+        self.soma.insert("kca") # K(Ca) sAHP potassium type current ***********
+        self.soma.insert("mykca") # medium AHP K++ current (BPG) ***********
         self.soma.insert("cad") # calcium pump/buffering mechanism
         for seg in self.soma:
             seg.gnabar_hha2 = 0.007
             seg.gkbar_hha2  = 0.007/5
             seg.gl_hha2     = 0
             seg.el_hha2     = -70
-            seg.g_pas =  1/Rm
+            seg.g_pas =  1/Rm  
 
             seg.ghdbar_h = gh_soma
             seg.vhalfl_h = -73
@@ -201,8 +209,8 @@ class PyramidalCell(modelcell):
             seg.gcalbar_cal = 0.0014/2
             seg.gcatbar_cat = 0.0001/2
             seg.gcabar_somacar = 0.0003
-            seg.gbar_kca = 5*0.0001
-            seg.gkbar_mykca = 0.09075
+            seg.gbar_kca = 5*0.0001 ###1e1
+            seg.gkbar_mykca = 0.09075 ###1e1
 
           
   
@@ -230,8 +238,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 0.1*0.00031635    # varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165 ###1e1
             seg.gbar_km = 0.06        # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 2*gka_soma        # 0.0075
             seg.gkabar_kad = 0
@@ -264,8 +272,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 10*0.00031635    # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165 ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 0
             seg.gkabar_kad = 4*gka_soma
@@ -299,8 +307,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 10*0.00031635    # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 0.5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 0.25*0.0165
+            seg.gbar_kca = 0.5*0.0001  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 0.25*0.0165  ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 0
             seg.gkabar_kad = 6*gka_soma
@@ -379,7 +387,7 @@ class PyramidalCell(modelcell):
             seg.gnabar_hha_old = 0.007
             seg.gkbar_hha_old  = 0.007/8.065
             seg.el_hha_old = -70
-            seg.g_pas = 1/200000
+            seg.g_pas = 1/200000 
 
 
 
@@ -402,8 +410,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 0.1*0.00031635 # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165  ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = gka_soma
             seg.gkabar_kad = 0
@@ -431,8 +439,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 0.1*0.00031635 # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165  ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 0.0075
             seg.gkabar_kad = 0
@@ -460,8 +468,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 0.1*0.00031635 # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001     ###1e1   # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165  ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = gka_soma
             seg.gkabar_kad = 0
@@ -488,8 +496,8 @@ class PyramidalCell(modelcell):
             seg.gcabar_car = 0.1*0.0003
             seg.gcalbar_calH = 0.1*0.00031635 # 4.6*0.00031635 varies from .1*0.00031635 to 4.6*0.00031635 as distance increases
             seg.gcatbar_cat = 0.0001        # 0.0001
-            seg.gbar_kca = 5*0.0001        # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165
+            seg.gbar_kca = 5*0.0001    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165  ###1e1
             seg.gbar_km = 0.06            # varies with distance (see Poirazzi et al. 2003 cell-setup.hoc file)
             seg.gkabar_kap = 0.0075
             seg.gkabar_kad = 0
@@ -509,7 +517,7 @@ class PyramidalCell(modelcell):
             seg.gkbar_hha2  = 0.1/5
             seg.gl_hha2 = 0
             seg.el_hha2 = -70
-            seg.g_pas = 1/Rm
+            seg.g_pas = 1/Rm 
 
 
         for sec in self.all:
@@ -518,7 +526,7 @@ class PyramidalCell(modelcell):
             sec.cm = 1
             sec.ena = 50
             sec.e_pas = -70
-            sec.g_pas = 1/Rm # crucial parameter for backpropagating action potential spiking of PCs
+            sec.g_pas = 1/Rm  # crucial parameter for backpropagating action potential spiking of PCs
             sec.ek = -80
             
 

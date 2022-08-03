@@ -8,6 +8,7 @@ Created on Tue Aug 11 08:41:29 2020
 import matplotlib.pyplot as plt
 import numpy as np
 from neuron import h
+import time
 # Plot voltage traces from example PC and INs
 # Summary diagram for Hippocampus paper
 # BPG 23-1-09
@@ -79,5 +80,6 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     plt.xlim([STIME, ETIME])
     plt.ylim([VMIN, VMAX])
     plt.show()
+    plt.savefig("plots/membrane_potential_traces" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp\
     plt.savefig('Images/' + simname + 'v.png')
     

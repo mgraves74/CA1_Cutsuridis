@@ -5,6 +5,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import time
 
 def plot_results(fstem,scaleDown=1,NUMCYCLES=8):
     scaleDown=1
@@ -119,6 +120,7 @@ def plot_results(fstem,scaleDown=1,NUMCYCLES=8):
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(fstem))
+    plt.savefig("plots/guitar2" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
     print(co[co>0].mean())

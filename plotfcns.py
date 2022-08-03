@@ -6,6 +6,7 @@ import fig9_patternrecall as fig9
 import fig10_Vtraces as fig10
 import numpy as np
 import pickle
+import time 
 
 def plotresults(*args):
     """
@@ -47,6 +48,7 @@ def plotresults(*args):
     plt.xlabel("Time (ms)")
     plt.ylabel("Neuron #")
     plt.title("Spike Raster")
+    plt.savefig("plots/spike_raster" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
 
     pvsoma = np.loadtxt("{}_pvsoma.dat".format(fstem),skiprows=1)
@@ -55,6 +57,7 @@ def plotresults(*args):
     plt.xlabel("Time (ms)")
     plt.ylabel("Membrane Potential (mV)")
     plt.title("Pattern Pyramidal Cell")
+    plt.savefig("plots/pattern_pyramidal_cell" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
         
     overall_performance=fig9.plot_results(params["simname"],params["netfile"],params["numCycles"],params["network_scale"])

@@ -9,6 +9,10 @@ import random
 from neuron import h
 from model_const import *
 import matplotlib.pyplot as plt
+import time
+
+###2c
+syn_death = 0
 
 usepar = 0
 printflag = 1
@@ -28,8 +32,8 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
         rs.r.discunif(int(pop_by_name[pre_type].gidst),int(pop_by_name[pre_type].gidend))  # pick a random presynaptic cell by gid of presynaptic cell type return source cell index
         u = np.zeros(int(pop_by_name[pre_type].num))  # for sampling without replacement, u[i]==1 means spike source i has already been chosen
         nsyn = 0
-        
-        while (nsyn < npresyn and nsyn < pop_by_name[pre_type].num):
+        alz_rand = random.random() #2c
+        while alz_rand < (1-syn_death) and (nsyn < npresyn and nsyn < pop_by_name[pre_type].num):
             r = int(rs.repick())
             # no self-connection and only one connection from any source
             if (r != cell.gid and u[r-int(pop_by_name[pre_type].gidst)] == 0):
@@ -44,7 +48,7 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
                         nc = pc.gid_connect(r, syn)
                     
                     nc.delay = delay
-                    nc.weight[0] = weight
+                    nc.weight[0] = weight 
                     nclist.append(nc)
                 
                 u[r-int(pop_by_name[pre_type].gidst)] = 1
@@ -59,6 +63,7 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
 # all-to-all connectivity between EC and PC pattern cells
 # appends the PC NetCons to a List called ncslist
 def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc):# {local i, gid, ncue  localobj cue, cstim, syn, src, nc, fp, target
+
     ncelist = []
     
     # read pattern file (ECPATT=num rows, NPATT = num columns)
@@ -102,6 +107,7 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
     cp = C_P    # connection probability
     #mcell_ran4_init(connect_random_low_start_)
     #rc = new Vector(pop_by_name["CA3Cell"].num)  # random physical connectivity
+    
     ncslist = []
     random.seed(connect_random_low_start_)
     #ncilist = new List()
@@ -134,7 +140,7 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
                 #for j=0, CA3_PC-1 { # You might need something like this line instead so that it doesn't error out if you are only planning to make a scaled down number of synapses
                 # only connection if physical connection exists
                 #if (rc[j] <= cp):
-                if (random.uniform(0,1) <= cp):
+                if (random.uniform(0,1) <= (1-syn_death)):
     
                     if usepar==1:
                         nc = pc.gid_connect(int(j+pop_by_name["CA3Cell"].gidst), synN)
@@ -151,7 +157,7 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
                     ncslist.append(nc)
                     nc.delay = CDEL
                     nc.weight[0] = CNWGT    # NMDA weight same for all connections
-                    # high AMPA if weight is 1
+                    # high AMPA if weight is 1  
                     
                     ncslist.append(nc2)
                     nc2.delay = CDEL
@@ -374,6 +380,7 @@ def spikeplot(cells,tstop,ntot):
 #            plt.vlines(cell.spike_times, i + 0.5, i + 1.5)
     plt.xlabel('Time (ms)')
     plt.ylabel('Neuron (gid)')
+    plt.savefig("plots/spikeplot" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 def vplot(cells,results):
@@ -388,6 +395,7 @@ def vplot(cells,results):
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
     plt.legend(loc="upper right")
+    plt.savefig("plots/vplot" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
 
     
@@ -400,6 +408,7 @@ def vplot(cells,results):
         
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
+    plt.savefig("plots/vplot2" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 # panel for simulation results
