@@ -46,11 +46,11 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
         alz_rand = random.random() ###2c
         CREB_rand = random.random() ###1e4 population affected by CREB
         while alz_rand < (1-syn_death) and (nsyn < npresyn and nsyn < pop_by_name[pre_type].num):
-            if CREB_rand < (1-CREB_pop):
-                cc.CREB.mAHP = 1
-                cc.CREB.sAHP = 1
-                cc.CREB.AMPA = 1
-                cc.CREB.NMDA = 1
+            #if CREB_rand < (1-CREB_pop):
+                #cc.CREB.mAHP = 1
+                #cc.CREB.sAHP = 1
+                #cc.CREB.AMPA = 1
+                #cc.CREB.NMDA = 1
             r = int(rs.repick())
             # no self-connection and only one connection from any source
             if (r != cell.gid and u[r-int(pop_by_name[pre_type].gidst)] == 0):
