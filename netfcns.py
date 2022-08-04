@@ -10,9 +10,20 @@ from neuron import h
 from model_const import *
 import matplotlib.pyplot as plt
 import time
+from model import cellClasses as cc ###1e4
+#from main import syndeath_params ###ANDY
+#from main import count_count ###ANDY
 
 ###2c
+#syn_death = None ###ANDY - otherwise place in syn_death parameter
 syn_death = 0
+
+#def initSynDeath(c): ###ANDY
+    #syn_death = syndeath_params[c]
+###1e4
+CREB_pop = .0
+###preallocated trial_name
+trial_name = 'trial'
 
 usepar = 0
 printflag = 1
@@ -32,8 +43,14 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
         rs.r.discunif(int(pop_by_name[pre_type].gidst),int(pop_by_name[pre_type].gidend))  # pick a random presynaptic cell by gid of presynaptic cell type return source cell index
         u = np.zeros(int(pop_by_name[pre_type].num))  # for sampling without replacement, u[i]==1 means spike source i has already been chosen
         nsyn = 0
-        alz_rand = random.random() #2c
+        alz_rand = random.random() ###2c
+        CREB_rand = random.random() ###1e4 population affected by CREB
         while alz_rand < (1-syn_death) and (nsyn < npresyn and nsyn < pop_by_name[pre_type].num):
+            if CREB_rand < (1-CREB_pop):
+                cc.CREB.mAHP = 1
+                cc.CREB.sAHP = 1
+                cc.CREB.AMPA = 1
+                cc.CREB.NMDA = 1
             r = int(rs.repick())
             # no self-connection and only one connection from any source
             if (r != cell.gid and u[r-int(pop_by_name[pre_type].gidst)] == 0):
@@ -380,7 +397,7 @@ def spikeplot(cells,tstop,ntot):
 #            plt.vlines(cell.spike_times, i + 0.5, i + 1.5)
     plt.xlabel('Time (ms)')
     plt.ylabel('Neuron (gid)')
-    plt.savefig("plots/spikeplot" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/spikeplot" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 def vplot(cells,results):
@@ -395,7 +412,7 @@ def vplot(cells,results):
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
     plt.legend(loc="upper right")
-    plt.savefig("plots/vplot" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/vplot" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
 
     
@@ -408,7 +425,7 @@ def vplot(cells,results):
         
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
-    plt.savefig("plots/vplot2" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/vplot2" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 # panel for simulation results

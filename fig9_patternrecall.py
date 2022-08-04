@@ -7,6 +7,8 @@ import math
 import matplotlib.pyplot as plt
 import time 
 
+###preallocated trial_name
+trial_name = 'trial'
 numCycles=8
 
 def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):    
@@ -129,7 +131,7 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(simname))
-    plt.savefig("plots/guitar" + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/guitar" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
     
