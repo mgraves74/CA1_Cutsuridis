@@ -10,20 +10,9 @@ from neuron import h
 from model_const import *
 import matplotlib.pyplot as plt
 import time
-from model import cellClasses as cc ###1e4
-#from main import syndeath_params ###ANDY
-#from main import count_count ###ANDY
+from model import cellClasses as cc
 
-###2c
-#syn_death = None ###ANDY - otherwise place in syn_death parameter
 syn_death = 0
-
-#def initSynDeath(c): ###ANDY
-    #syn_death = syndeath_params[c]
-###1e4
-CREB_pop = .0
-###preallocated trial_name
-trial_name = 'trial'
 
 usepar = 0
 printflag = 1
@@ -33,7 +22,7 @@ cuelist = []
 tvec = h.Vector()
 idvec = h.Vector()
 
-def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synstart, synend,npresyn,weight,delay, pc): # {local i, j, gid, nsyn, r  localobj syn, nc, rs, u
+def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synstart, synend,npresyn,weight,delay, pc, syn_death): # {local i, j, gid, nsyn, r  localobj syn, nc, rs, u
     # initialize the pseudorandom number generator
     ctcons=0
     for i in range(pop_by_name[post_type].core_st,pop_by_name[post_type].core_en+1):
@@ -44,13 +33,7 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
         u = np.zeros(int(pop_by_name[pre_type].num))  # for sampling without replacement, u[i]==1 means spike source i has already been chosen
         nsyn = 0
         alz_rand = random.random() ###2c
-        CREB_rand = random.random() ###1e4 population affected by CREB
         while alz_rand < (1-syn_death) and (nsyn < npresyn and nsyn < pop_by_name[pre_type].num):
-            #if CREB_rand < (1-CREB_pop):
-                #cc.CREB.mAHP = 1
-                #cc.CREB.sAHP = 1
-                #cc.CREB.AMPA = 1
-                #cc.CREB.NMDA = 1
             r = int(rs.repick())
             # no self-connection and only one connection from any source
             if (r != cell.gid and u[r-int(pop_by_name[pre_type].gidst)] == 0):
@@ -65,8 +48,15 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
                         nc = pc.gid_connect(r, syn)
                     
                     nc.delay = delay
-                    nc.weight[0] = weight 
+                    nc.weight[0] = weight ###original
                     nclist.append(nc)
+                    ### AMPA 1e2
+                    # if pop_by_name[post_type].gidst == 0 and cell.CREBcell == False:     
+                    #     nc.weight[0] = weight 
+                    #     nclist.append(nc)
+                    # elif pop_by_name[post_type].gidst == 0 and cell.CREBcell == True and pop_by_name[pre_type].gidst == 0:
+                    #     nc.weight[0] = weight*cc.CREB.AMPA
+                    #     nclist.append(nc)
                 
                 u[r-int(pop_by_name[pre_type].gidst)] = 1
                 nsyn += 1
@@ -79,7 +69,7 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
 # read active PCs from pattern file
 # all-to-all connectivity between EC and PC pattern cells
 # appends the PC NetCons to a List called ncslist
-def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc):# {local i, gid, ncue  localobj cue, cstim, syn, src, nc, fp, target
+def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc, syn_death):# {local i, gid, ncue  localobj cue, cstim, syn, src, nc, fp, target
 
     ncelist = []
     
@@ -102,16 +92,23 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc):# 
                 syn = target.pre_list[k]    # excitatory synapse
                 # create pattern stimulus
                 for j in range(int(pop_by_name["ECCell"].num)):
-                    # set up connection from source to target
-                    #nc = pc.gid_connect(j+iEC, syn)
-                    if usepar==1:
-                        nc = pc.gid_connect(int(j+pop_by_name["ECCell"].gidst), syn)
-                    else:
-                        src = cells[int(j+pop_by_name["ECCell"].gidst)].stim
-                        nc = h.NetCon(src, syn)
-                    ncelist.append(nc)
-                    nc.delay = ECDEL
-                    nc.weight[0] = ECWGT
+                    ECsyn_death_rand = random.random()
+                    if ECsyn_death_rand < (1-syn_death):
+                        # set up connection from source to target
+                        #nc = pc.gid_connect(j+iEC, syn)
+                        if usepar==1:
+                            nc = pc.gid_connect(int(j+pop_by_name["ECCell"].gidst), syn)
+                        else:
+                            src = cells[int(j+pop_by_name["ECCell"].gidst)].stim
+                            nc = h.NetCon(src, syn)
+                        ncelist.append(nc)
+                        nc.delay = ECDEL
+                        nc.weight[0] = ECWGT ### Original
+                        ###AMPA 1e2
+                        # if cell.CREBcell == False:  
+                        #     nc.weight[0] = ECWGT
+                        # if cell.CREBcell == True:
+                        #     nc.weight[0] = ECWGT*cc.CREB.AMPA
     return ncelist
                     
 
@@ -120,7 +117,7 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc):# 
 # a target being a column with index i for target cell i
 # appends the PC NetCons to a List called ncslist
                     
-def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_low_start_, pc): # {local i, j, cp, gid  localobj src, syn, synN, nc, fc, rs, conns, rc
+def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_low_start_, pc, syn_death): # {local i, j, cp, gid  localobj src, syn, synN, nc, fc, rs, conns, rc
     cp = C_P    # connection probability
     #mcell_ran4_init(connect_random_low_start_)
     #rc = new Vector(pop_by_name["CA3Cell"].num)  # random physical connectivity
@@ -168,25 +165,40 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
                         nc = h.NetCon(src, synN)
                         nc2 = h.NetCon(src, syn)
     
-    
+###AMPA ###1e2
                     # set up connection from source to target NMDA synapse
                     #        nc = pc.gid_connect(j+iCA3, synN)
                     ncslist.append(nc)
                     nc.delay = CDEL
-                    nc.weight[0] = CNWGT    # NMDA weight same for all connections
-                    # high AMPA if weight is 1  
-                    
+                    #nc.weight[0] = CNWGT ###Original
+                    if cell.CREBcell == False:
+                        nc.weight[0] = CNWGT
+                    if cell.CREBcell == True:
+                        nc.weight[0] = CNWGT*cc.CREB.AMPA
                     ncslist.append(nc2)
                     nc2.delay = CDEL
 
+                    ### Original
                     if (conns[i,j] == 1): # TODO access the correct column
-                        # set up connection from source to target
-                        #nc = pc.gid_connect(j+iCA3, syn)
-                        nc2.weight[0] = CHWGT
+                      # set up connection from source to target
+                      #nc = pc.gid_connect(j+iCA3, syn)
+                      nc2.weight[0] = CHWGT
                     else:
-                        # set up connection from source to target
-                        #nc = pc.gid_connect(j+iCA3, syn)
-                        nc2.weight[0] = CLWGT    # unlearned weight
+                      # set up connection from source to target
+                      #nc = pc.gid_connect(j+iCA3, syn)
+                      nc2.weight[0] = CLWGT    # unlearned weight
+
+###NMDA ###1e3
+                    # if (conns[i,j] == 1) and cell.CREBcell == False: # TODO access the correct column
+                    #     # set up connection from source to target
+                    #     #nc = pc.gid_connect(j+iCA3, syn)
+                    #     nc2.weight[0] = CHWGT
+                    # elif (conns[i,j] == 1) and cell.CREBcell == True:
+                    #     nc2.weight[0] = CHWGT*cc.CREB.NMDA
+                    # else:
+                    #     # set up connection from source to target
+                    #     #nc = pc.gid_connect(j+iCA3, syn)
+                    #     nc2.weight[0] = CLWGT    # unlearned weight
 
     return ncslist
 
@@ -397,7 +409,7 @@ def spikeplot(cells,tstop,ntot):
 #            plt.vlines(cell.spike_times, i + 0.5, i + 1.5)
     plt.xlabel('Time (ms)')
     plt.ylabel('Neuron (gid)')
-    plt.savefig("plots/spikeplot" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/spikeplot" + str(simname) + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 def vplot(cells,results):
@@ -412,7 +424,7 @@ def vplot(cells,results):
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
     plt.legend(loc="upper right")
-    plt.savefig("plots/vplot" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/vplot" + str(simname) + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
 
     
@@ -425,7 +437,7 @@ def vplot(cells,results):
         
     plt.xlabel('Time (ms)')
     plt.ylabel('Membrane Potential (mV)')
-    plt.savefig("plots/vplot2" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots/vplot2" + str(simname) + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     plt.show()
     
 # panel for simulation results

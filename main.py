@@ -25,25 +25,31 @@ import netfcns
 from model import cellClasses
 import pickle
 
-print('import_checkpoint') ###checkpoint
+#############Check the CREB preallocation in cellClasses and the things changed also outline the tests needed and also CREBlist
 
-#celldeath_params = [.15, .46, .65] ###ANDY
-#syndeath_params = [.09, .26, .35] ###ANDY
-
-#for count_count in range(3): ###ANDY ###remove when we do the bash loop
+### python file to send to bash script
+with open("runthis.sh",'w') as f:
+    simname = 'guitar'
+    celldeath_i = [0, 0.15, 0.46, 0.65]
+    syn_death_i = [0, 0.09, 0.26, 0.35]
+    CREB_pop_k = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    for crebpop in CREB_pop_k:
+        for i in range(len(celldeath_i)):
+            celldeath = celldeath_i[i]
+            syn_death = syn_death_i[i]
+            simname = 'guitar' + str(syn_death) + '_' + str(celldeath) + '_' + str(crebpop)
+            print(f"python main.py {simname} {celldeath} {syn_death} {crebpop}",file=f)
 
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
 
-print('checkpoint0') ###checkpoint
 #%%
 
 ###2c
-###celldeath = celldeath_params[count_count] ###ANDY
-###netfcns.initSynDeath(count_count) ###ANDY
 celldeath = 0
-### preallocated trial_name that I guess is just overwritten in a few lines but who cares
-trial_name = 'trial'
+
+###1e4
+CREB_pop = 0
 
 #################
 # PARAMETERS
@@ -87,7 +93,7 @@ if len(sys.argv)>(startlen):
         if len(sys.argv)>(2*argadd+startlen):
             syn_death = float(sys.argv[2*argadd+startlen]) ###adds syn_death to command line
             if len(sys.argv)>(3*argadd+startlen):
-                trial_name = float(sys.argv[3*argadd+startlen]) ###adds trial_name to command line
+                CREB_pop = float(sys.argv[3*argadd+startlen])
             #if len(sys.argv)>(2*argadd+startlen):
                 #electrostim = float(sys.argv[2*argadd+startlen])
             #if len(sys.argv)>(3*argadd+startlen):
@@ -194,7 +200,7 @@ newcell = None
 
 for pop in poplist:
     pop_by_name[pop.popname] = pop
-    pop.gidst=int(st)
+    pop.gidst=int(st) 
     pop.gidend=int(pop.gidst + pop.num - 1)
     st = int(pop.gidend + 1)
     pop.core_st = int(core_i)
@@ -206,6 +212,12 @@ for pop in poplist:
             if (pc.id()==0 and printflag>1):
                 print("newcell = cellClasses."+pop.classtype+ "(int("+str(j)+"))")
             exec("newcell = cellClasses."+pop.classtype+ "(int("+str(j)+"))")
+            CREB_rand = random.random() ###1e4 population affected by CREB
+            if CREB_rand < (1-CREB_pop) and pop.gidst == 0:
+               newcell.update_biophysics(cellClasses.noCREB)
+               print("noCREB")
+               newcell.CREBcell = False
+               print(f"{j}:{CREB_rand}")
             if (pop.isart==1):
                 newcell.stim.gid = int(j)
                 newcell.stim.core_i = int(core_i)
@@ -235,7 +247,6 @@ ntot = ncell+nstim # total number of cells
 
 pc.barrier() # wait for all cores to get to this point before continuing
 
-print('checkpoint2') ###checkpoint
 #%%
 
 #################
@@ -276,7 +287,7 @@ else:
     FPATT = "Weights/pattsN100S20P5scaled.dat"    # "Weights/pattsN100S20P5.dat"    # already stored patterns
     FSTORE = "Weights/pattsN100S20P5scaled.dat"    # "Weights/pattsN100S20P5.dat"    # new patterns to store
     
-print('checkpoint3') ###checkpoint
+print('checkpoint2') ###checkpoint
 #%%
 
 #################
@@ -377,25 +388,24 @@ nclist = []
 
 # # Make connections with data from above
 for conn in connlist: 
-    conn.connsMade = netfcns.connectcells(cells,ranlist, nclist, pop_by_name, conn.popname, conn.prepop, synstart=conn.synst, synend=conn.synend, npresyn=conn.prenum, weight=conn.weight, delay= conn.delay, pc = pc)
+    conn.connsMade = netfcns.connectcells(cells,ranlist, nclist, pop_by_name, conn.popname, conn.prepop, synstart=conn.synst, synend=conn.synend, npresyn=conn.prenum, weight=conn.weight, delay= conn.delay, pc = pc, syn_death = syn_death)
     #if (printflag>1):
     #    print("newtar starts with ", pop_by_name[conn.popname].gidst, " and pre starts with ", pop_by_name[conn.prepop].gidst , " and conns made = ", conn.connsMade)
 
 #netfcns.mkinputs(cells, pop_by_name['CA3Cell'].gidst, pop_by_name['ECCell'].gidst, pop_by_name['SEPCell'].gidst, ntot, pop_by_name)
 # EC input to PCs
-ncelist = netfcns.connectEC(FPATT, ECPATT, NPATT, E_EC, 2, cells,  pop_by_name, pc)	#  restore existing pattern
+ncelist = netfcns.connectEC(FPATT, ECPATT, NPATT, E_EC, 2, cells,  pop_by_name, pc, syn_death)	#  restore existing pattern
 # CA3 input to PCs
-ncslist = netfcns.connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_low_start_, pc)	# with modifiable synapses
+print('checkpoint that only takes long in the spyder kernel')
+ncslist = netfcns.connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_low_start_, pc, syn_death)	# with modifiable synapses
 #%%
 
 #################
 # SET CUES FOR PATTERNS
 #################
-
 netfcns.mkcue(FPATT, CPATT, CFRAC, NPATT, SPATT, cells, ranlist, pop_by_name, pc)	# cue from already stored pattern
 #netfcns.mkcue(FSTORE, CPATT, CFRAC, NSTORE)	# cue from new pattern
 netfcns.mkEC(cells, ranlist, pop_by_name, pc)
-
 
 #%%
 
@@ -406,7 +416,6 @@ netfcns.mkEC(cells, ranlist, pop_by_name, pc)
 netfcns.spikerecord(cells,pc)
 results = netfcns.vrecord(cells,pop_by_name, iPPC, iNPPC,pc)
 
-print('checkpoint4') ###checkpoint
 #%% Cell Death and Electrostim
 
 num2pick = int(percentDeath*pop_by_name["PyramidalCell"].num) # number of cells
@@ -436,6 +445,7 @@ for x in range(num2pick):
 #         Ctmpvar = int(Cnew_random.repick())
 #     CREBlist.append(Cnew_random)
 
+print('checkpoint_deadlist')
 if (pc.id()==0 and percentDeath>0):
     print("List of cells that died:")
 list_clamps=[]
@@ -466,8 +476,7 @@ if (electrostim>0):
             # myvec = h.Vector() 
             # myvec # fill with a pattern
             # myvec.play(electclamp.amp) 
-            
-print('checkpoint5') ###checkpoint
+print('checkpoint4')
 #%%
 
 #################
@@ -485,8 +494,6 @@ def prun():
         print("Parallel run is going to run till",h.tstop)
     pc.psolve(h.tstop);
     pc.barrier()  # wait for all hosts to get to this point
-
-
 
 # Do parallel run for each stored pattern
 def bpattrun():
@@ -521,11 +528,15 @@ h('fihw = new FInitializeHandler(2, "midbal()")')
 if (pc.id()==0 and printflag>0):
     print("Now running simulation at scale = ", network_scale, " for time = ", SIMDUR, " with scaleEScon = ", scaleEScon)
 
+print('checkpoint_simulation')
+
 if usepar==1:
     prun() # run and print results
 else:
     h.run() 
-    
+
+print('checkpoint_results')
+
 # print out the results
 spikeout = netfcns.spikeout(cells,fstem,pc)
 vout = netfcns.vout(cells,results,fstem,pc)
@@ -539,7 +550,6 @@ perf = fig9.calc_performance(simname,netfile,numCycles, network_scale)
 
 data2save={'dt':h.dt, 'tstop':h.tstop, 'netfile':netfile, 'simname':simname, 'performance':perf, 'electrostim':electrostim, 'percentDeath':percentDeath, 'network_scale':network_scale}
 
-print('checkpoint6') ###checkpoint
 #%%
 # import pickle
 

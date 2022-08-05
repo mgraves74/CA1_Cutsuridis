@@ -6,10 +6,11 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import time 
+import pandas as pd
 
-###preallocated trial_name
-trial_name = 'trial'
 numCycles=8
+#list123 = []
+#list_performance = []
 
 def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):    
     #NCELL = 235-(1-scaleDown)*230  # number of cells (neurons); CA3, EC, SEP Pyr can be scaled down (230)
@@ -131,12 +132,28 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(simname))
-    plt.savefig("plots/guitar" + str(time.time()) + str(trial_name) + ".png") #ANDY - saved plot in folder, marked with timestamp
-    plt.show()
-    
+    plt.savefig("plots/" + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    #plt.show()
     
     print("Overall performance metric for {}: {}".format(simname,co[co>0].mean()))
-
+    
+    ###saves performance - doesn't work
+    # with open('performance_list.sh', 'w'):
+    #     print('')
+    #     print(co[co>0].mean())
+    
+    ###saves recall quality
+    df = pd.DataFrame(
+        {'time':ti, 
+         'recall':co.flatten()}
+    )
+    df.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\recall_quality' + str(simname) + str(time.time()) + '.csv',index=False)    
+    
+    #performance_var = co[co>0].mean()
+    
+    #df2 = pd.DataFrame({'123' : [], 'performance':[]})
+    #df2 = pd.DataFrame(columns = ['123', 'performance'])
+    
     return co[co>0].mean()
 
 def calc_performance(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):    
