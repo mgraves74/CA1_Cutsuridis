@@ -13,6 +13,7 @@ class CREB_class:
         self.NMDA = NMDA
 CREB = CREB_class(.52, .64, 1, 1) #.52 #.64 #1 is no creb, 0<x<1 is low CREB, 1< is high CREB, 0 breaks the code
 noCREB = CREB_class(1, 1, 1, 1)
+CREBlevel =CREB_class(1, 1, 1, 1)
 
 keepoldtypo = 0
 
@@ -179,31 +180,31 @@ class PyramidalCell(modelcell):
         self.all = h.SectionList()
         self.all.wholetree(sec=self.soma)
 
-    def update_biophysics(self, CREB):
+    def update_biophysics(self, CREB, CREBlevel):
         for seg in self.soma: 
-            seg.gbar_kca = 5*0.0001*CREB.sAHP ###1e1
-            seg.gkbar_mykca = 0.09075*CREB.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP ###1e1
+            seg.gkbar_mykca = 0.09075*CREB.mAHP*CREBlevel.mAHP ###1e1
         for seg in self.radTprox:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP ###1e1
         for seg in self.radTmed:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP ###1e1
         for seg in self.radTdist:
-            seg.gbar_kca = 0.5*0.0001*CREB.sAHP  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 0.25*0.0165*CREB.mAHP  ###1e1
+            seg.gbar_kca = 0.5*0.0001*CREB.sAHP*CREBlevel.sAHP  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 0.25*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
         for seg in self.oriprox1:
-             seg.gbar_kca = 5*0.0001*CREB.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-             seg.gkbar_mykca = 2*0.0165*CREB.mAHP  ###1e1
+             seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+             seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
         for seg in self.oriprox2:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
         for seg in self.oridist1:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP     ###1e1   # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP     ###1e1   # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
         for seg in self.oridist2:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
 
     def define_biophysics(self):
 

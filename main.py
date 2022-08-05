@@ -30,15 +30,19 @@ import pickle
 ### python file to send to bash script
 with open("runthis.sh",'w') as f:
     simname = 'guitar'
-    celldeath_i = [0, 0.15, 0.46, 0.65]
-    syn_death_i = [0, 0.09, 0.26, 0.35]
-    CREB_pop_k = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-    for crebpop in CREB_pop_k:
-        for i in range(len(celldeath_i)):
-            celldeath = celldeath_i[i]
-            syn_death = syn_death_i[i]
-            simname = 'guitar' + str(syn_death) + '_' + str(celldeath) + '_' + str(crebpop)
-            print(f"python main.py {simname} {celldeath} {syn_death} {crebpop}",file=f)
+    celldeath_k = [0, 0.15, 0.46, 0.65]
+    syn_death_k = [0, 0.09, 0.26, 0.35]
+    CREB_pop_i = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    CREBlevel_j = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    for i in range(len(CREB_pop_i)):
+        CREB_pop = CREB_pop_i[i]
+        for j in range(len(CREBlevel_j)):
+            CREBlevel = CREBlevel_j[j]
+            for k in range(len(celldeath_k)):
+                celldeath = celldeath_k[k]
+                syn_death = syn_death_k[k]
+                simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' +str(CREBlevel)
+                print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel}",file=f)
 
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
@@ -76,7 +80,6 @@ electrostim = 0 # 0 = no stimulation, 1 = stimulation according to parameters se
 percentDeath = celldeath # fraction of pyramidal cells to kill off  ###2c
                   # to represent a disease state
 
-
 # Check for parameters being passed in via the command line
 argadd = 1
 startlen = 1
@@ -94,6 +97,8 @@ if len(sys.argv)>(startlen):
             syn_death = float(sys.argv[2*argadd+startlen]) ###adds syn_death to command line
             if len(sys.argv)>(3*argadd+startlen):
                 CREB_pop = float(sys.argv[3*argadd+startlen])
+                if len(sys.argv)>(4*argadd+startlen):
+                    CREBlevel = float(sys.argv[4*argadd+startlen])
             #if len(sys.argv)>(2*argadd+startlen):
                 #electrostim = float(sys.argv[2*argadd+startlen])
             #if len(sys.argv)>(3*argadd+startlen):
@@ -214,10 +219,12 @@ for pop in poplist:
             exec("newcell = cellClasses."+pop.classtype+ "(int("+str(j)+"))")
             CREB_rand = random.random() ###1e4 population affected by CREB
             if CREB_rand < (1-CREB_pop) and pop.gidst == 0:
-               newcell.update_biophysics(cellClasses.noCREB)
+               newcell.update_biophysics(cellClasses.noCREB, cellClasses.noCREB)
                print("noCREB")
                newcell.CREBcell = False
                print(f"{j}:{CREB_rand}")
+            elif CREB_rand < (CREB_pop) and pop.gidst == 0:
+                newcell.update_biophysics(cellClasses.CREB, cellClasses.CREBlevel)
             if (pop.isart==1):
                 newcell.stim.gid = int(j)
                 newcell.stim.core_i = int(core_i)
