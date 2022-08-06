@@ -9,10 +9,8 @@ import time
 import pandas as pd
 
 numCycles=8
-#list123 = []
-#list_performance = []
 
-def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):    
+def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): ###file_num = file_num doesn't work 
     #NCELL = 235-(1-scaleDown)*230  # number of cells (neurons); CA3, EC, SEP Pyr can be scaled down (230)
     NPCELL = int(100*scaleDown) # number of PC (output) cells
     #SPATT = 20*scaleDown   # number of active cells per pattern
@@ -149,10 +147,11 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1):
     )
     df.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\recall_quality' + str(simname) + str(time.time()) + '.csv',index=False)    
     
-    #performance_var = co[co>0].mean()
-    
-    #df2 = pd.DataFrame({'123' : [], 'performance':[]})
-    #df2 = pd.DataFrame(columns = ['123', 'performance'])
+    # performance_var = co[co>0].mean()
+    # if file_num == 1:
+    #     df2 = pd.DataFrame(columns = ['simname', 'performance'])
+    #     df2.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\performance' + str(simname) + str(time.time()) + '.csv',index=False)
+    # df2.append(simname, performance_var)
     
     return co[co>0].mean()
 

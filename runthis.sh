@@ -1,44 +1,28 @@
-python main.py guitar0_0_0 0 0 0
-python main.py guitar0.09_0.15_0 0.15 0.09 0
-python main.py guitar0.26_0.46_0 0.46 0.26 0
-python main.py guitar0.35_0.65_0 0.65 0.35 0
-python main.py guitar0_0_0.1 0 0 0.1
-python main.py guitar0.09_0.15_0.1 0.15 0.09 0.1
-python main.py guitar0.26_0.46_0.1 0.46 0.26 0.1
-python main.py guitar0.35_0.65_0.1 0.65 0.35 0.1
-python main.py guitar0_0_0.2 0 0 0.2
-python main.py guitar0.09_0.15_0.2 0.15 0.09 0.2
-python main.py guitar0.26_0.46_0.2 0.46 0.26 0.2
-python main.py guitar0.35_0.65_0.2 0.65 0.35 0.2
-python main.py guitar0_0_0.3 0 0 0.3
-python main.py guitar0.09_0.15_0.3 0.15 0.09 0.3
-python main.py guitar0.26_0.46_0.3 0.46 0.26 0.3
-python main.py guitar0.35_0.65_0.3 0.65 0.35 0.3
-python main.py guitar0_0_0.4 0 0 0.4
-python main.py guitar0.09_0.15_0.4 0.15 0.09 0.4
-python main.py guitar0.26_0.46_0.4 0.46 0.26 0.4
-python main.py guitar0.35_0.65_0.4 0.65 0.35 0.4
-python main.py guitar0_0_0.5 0 0 0.5
-python main.py guitar0.09_0.15_0.5 0.15 0.09 0.5
-python main.py guitar0.26_0.46_0.5 0.46 0.26 0.5
-python main.py guitar0.35_0.65_0.5 0.65 0.35 0.5
-python main.py guitar0_0_0.6 0 0 0.6
-python main.py guitar0.09_0.15_0.6 0.15 0.09 0.6
-python main.py guitar0.26_0.46_0.6 0.46 0.26 0.6
-python main.py guitar0.35_0.65_0.6 0.65 0.35 0.6
-python main.py guitar0_0_0.7 0 0 0.7
-python main.py guitar0.09_0.15_0.7 0.15 0.09 0.7
-python main.py guitar0.26_0.46_0.7 0.46 0.26 0.7
-python main.py guitar0.35_0.65_0.7 0.65 0.35 0.7
-python main.py guitar0_0_0.8 0 0 0.8
-python main.py guitar0.09_0.15_0.8 0.15 0.09 0.8
-python main.py guitar0.26_0.46_0.8 0.46 0.26 0.8
-python main.py guitar0.35_0.65_0.8 0.65 0.35 0.8
-python main.py guitar0_0_0.9 0 0 0.9
-python main.py guitar0.09_0.15_0.9 0.15 0.09 0.9
-python main.py guitar0.26_0.46_0.9 0.46 0.26 0.9
-python main.py guitar0.35_0.65_0.9 0.65 0.35 0.9
-python main.py guitar0_0_1 0 0 1
-python main.py guitar0.09_0.15_1 0.15 0.09 1
-python main.py guitar0.26_0.46_1 0.46 0.26 1
-python main.py guitar0.35_0.65_1 0.65 0.35 1
+python main.py guitar_0_0_1_0.125 0 0 1 0.125
+python main.py guitar_0.09_0.15_1_0.125 0.15 0.09 1 0.125
+python main.py guitar_0.26_0.46_1_0.125 0.46 0.26 1 0.125
+python main.py guitar_0.35_0.65_1_0.125 0.65 0.35 1 0.125
+python main.py guitar_0_0_1_0.25 0 0 1 0.25
+python main.py guitar_0.09_0.15_1_0.25 0.15 0.09 1 0.25
+python main.py guitar_0.26_0.46_1_0.25 0.46 0.26 1 0.25
+python main.py guitar_0.35_0.65_1_0.25 0.65 0.35 1 0.25
+python main.py guitar_0_0_1_0.5 0 0 1 0.5
+python main.py guitar_0.09_0.15_1_0.5 0.15 0.09 1 0.5
+python main.py guitar_0.26_0.46_1_0.5 0.46 0.26 1 0.5
+python main.py guitar_0.35_0.65_1_0.5 0.65 0.35 1 0.5
+python main.py guitar_0_0_1_1 0 0 1 1
+python main.py guitar_0.09_0.15_1_1 0.15 0.09 1 1
+python main.py guitar_0.26_0.46_1_1 0.46 0.26 1 1
+python main.py guitar_0.35_0.65_1_1 0.65 0.35 1 1
+python main.py guitar_0_0_1_2 0 0 1 2
+python main.py guitar_0.09_0.15_1_2 0.15 0.09 1 2
+python main.py guitar_0.26_0.46_1_2 0.46 0.26 1 2
+python main.py guitar_0.35_0.65_1_2 0.65 0.35 1 2
+python main.py guitar_0_0_1_4 0 0 1 4
+python main.py guitar_0.09_0.15_1_4 0.15 0.09 1 4
+python main.py guitar_0.26_0.46_1_4 0.46 0.26 1 4
+python main.py guitar_0.35_0.65_1_4 0.65 0.35 1 4
+python main.py guitar_0_0_1_8 0 0 1 8
+python main.py guitar_0.09_0.15_1_8 0.15 0.09 1 8
+python main.py guitar_0.26_0.46_1_8 0.46 0.26 1 8
+python main.py guitar_0.35_0.65_1_8 0.65 0.35 1 8

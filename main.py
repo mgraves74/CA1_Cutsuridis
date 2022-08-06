@@ -25,15 +25,15 @@ import netfcns
 from model import cellClasses
 import pickle
 
-#############Check the CREB preallocation in cellClasses and the things changed also outline the tests needed and also CREBlist
+file_num = 0
 
 ### python file to send to bash script
 with open("runthis.sh",'w') as f:
     simname = 'guitar'
     celldeath_k = [0, 0.15, 0.46, 0.65]
     syn_death_k = [0, 0.09, 0.26, 0.35]
-    CREB_pop_i = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-    CREBlevel_j = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    CREB_pop_i = [1, 0.5] #0, 0.2, 0.4, 0.6, 0.8, 1]
+    CREBlevel_j = [0.125, 0.25, 0.50, 1, 2, 4, 8]
     for i in range(len(CREB_pop_i)):
         CREB_pop = CREB_pop_i[i]
         for j in range(len(CREBlevel_j)):
@@ -42,8 +42,9 @@ with open("runthis.sh",'w') as f:
                 celldeath = celldeath_k[k]
                 syn_death = syn_death_k[k]
                 simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' +str(CREBlevel)
-                print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel}",file=f)
-
+                # file_num += 1
+                print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel}",file=f) ###{file_num}
+    
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
 
@@ -99,6 +100,8 @@ if len(sys.argv)>(startlen):
                 CREB_pop = float(sys.argv[3*argadd+startlen])
                 if len(sys.argv)>(4*argadd+startlen):
                     CREBlevel = float(sys.argv[4*argadd+startlen])
+                    # if len(sys.argv)>(5*argadd+startlen):
+                    #     file_num = float(sys.argv[5*argadd+startlen])
             #if len(sys.argv)>(2*argadd+startlen):
                 #electrostim = float(sys.argv[2*argadd+startlen])
             #if len(sys.argv)>(3*argadd+startlen):
@@ -143,6 +146,7 @@ with open('pyresults/' + simname + '.pickle', 'wb') as f:
     pickle.dump(params, f, pickle.HIGHEST_PROTOCOL)
 
 print('checkpoint1') ###checkpoint
+print(simname, celldeath, syn_death, CREB_pop, CREBlevel)
 #%%
 
 #################
@@ -225,6 +229,7 @@ for pop in poplist:
                print(f"{j}:{CREB_rand}")
             elif CREB_rand < (CREB_pop) and pop.gidst == 0:
                 newcell.update_biophysics(cellClasses.CREB, cellClasses.CREBlevel)
+                newcell.CREBcell = True
             if (pop.isart==1):
                 newcell.stim.gid = int(j)
                 newcell.stim.core_i = int(core_i)
