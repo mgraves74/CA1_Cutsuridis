@@ -105,9 +105,9 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc, sy
                         nc.delay = ECDEL
                         nc.weight[0] = ECWGT ### Original
                         ###AMPA 1e2
-                        # if cell.CREBcell == False:  
+                        # if target.CREBcell == False:  
                         #     nc.weight[0] = ECWGT
-                        # if cell.CREBcell == True:
+                        # if target.CREBcell == True:
                         #     nc.weight[0] = ECWGT*cc.CREB.AMPA
     return ncelist
                     

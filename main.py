@@ -33,7 +33,7 @@ with open("runthis.sh",'w') as f:
     celldeath_k = [0, 0.15, 0.46, 0.65]
     syn_death_k = [0, 0.09, 0.26, 0.35]
     CREB_pop_i = [1, 0.5] #0, 0.2, 0.4, 0.6, 0.8, 1]
-    CREBlevel_j = [0.125, 0.25, 0.50, 1, 2, 4, 8]
+    CREBlevel_j = [1, 0.125, 0.25, 0.50, 1, 2, 4, 8]
     for i in range(len(CREB_pop_i)):
         CREB_pop = CREB_pop_i[i]
         for j in range(len(CREBlevel_j)):
@@ -71,7 +71,7 @@ plotflag = 0
 network_scale = 1 #0.2 # set to 1 for full scale or 0.2 for a quick test with a small network
 scaleEScon = 1 # #1 scaling factor for number of excitatory connections in the network, should be set to 1
 
-numCycles = 8 # set to 2 for a short test network or 8 for a full simulation
+numCycles = 1 # set to 2 for a short test network or 8 for a full simulation
 simname="guitar"
 trial_name = "Normal"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
