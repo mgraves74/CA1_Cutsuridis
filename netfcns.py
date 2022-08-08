@@ -22,6 +22,17 @@ cuelist = []
 tvec = h.Vector()
 idvec = h.Vector()
 
+if cc.CREBtype == 1:
+    cc.CREB = cc.CREB_class(.52, .64, 1, 1)
+elif cc.CREBtype == 2:
+    cc.CREB = cc.CREB_class(1, 1, 1.622, 1)
+elif cc.CREBtype == 3:
+    cc.CREB = cc.CREB_class(1, 1, 1, 1.5)
+elif cc.CREBtype == 4:
+    cc.CREB = cc.CREB_class(.52, .64, 1.622, 1.5)
+    
+#print(cc.CREB.mAHP, cc.CREB.sAHP, cc.CREB.AMPA, cc.CREB.NMDA)
+    
 def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synstart, synend,npresyn,weight,delay, pc, syn_death): # {local i, j, gid, nsyn, r  localobj syn, nc, rs, u
     # initialize the pseudorandom number generator
     ctcons=0
@@ -48,15 +59,15 @@ def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synst
                         nc = pc.gid_connect(r, syn)
                     
                     nc.delay = delay
-                    nc.weight[0] = weight ###original
+                    #nc.weight[0] = weight ###original
                     nclist.append(nc)
                     ### AMPA 1e2
-                    # if pop_by_name[post_type].gidst == 0 and cell.CREBcell == False:     
-                    #     nc.weight[0] = weight 
-                    #     nclist.append(nc)
-                    # elif pop_by_name[post_type].gidst == 0 and cell.CREBcell == True and pop_by_name[pre_type].gidst == 0:
-                    #     nc.weight[0] = weight*cc.CREB.AMPA
-                    #     nclist.append(nc)
+                    if pop_by_name[post_type].gidst == 0 and cell.CREBcell == False:     
+                        nc.weight[0] = weight 
+                        nclist.append(nc)
+                    elif pop_by_name[post_type].gidst == 0 and cell.CREBcell == True and pop_by_name[pre_type].gidst == 0:
+                        nc.weight[0] = weight*cc.CREB.AMPA
+                        nclist.append(nc)
                 
                 u[r-int(pop_by_name[pre_type].gidst)] = 1
                 nsyn += 1
@@ -103,12 +114,12 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc, sy
                             nc = h.NetCon(src, syn)
                         ncelist.append(nc)
                         nc.delay = ECDEL
-                        nc.weight[0] = ECWGT ### Original
+                        #nc.weight[0] = ECWGT ### Original
                         ###AMPA 1e2
-                        # if target.CREBcell == False:  
-                        #     nc.weight[0] = ECWGT
-                        # if target.CREBcell == True:
-                        #     nc.weight[0] = ECWGT*cc.CREB.AMPA
+                        if target.CREBcell == False:  
+                            nc.weight[0] = ECWGT
+                        if target.CREBcell == True:
+                            nc.weight[0] = ECWGT*cc.CREB.AMPA
     return ncelist
                     
 
@@ -178,29 +189,31 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
                     ncslist.append(nc2)
                     nc2.delay = CDEL
 
-                    ### Original
-                    if (conns[i,j] == 1): # TODO access the correct column
-                      # set up connection from source to target
-                      #nc = pc.gid_connect(j+iCA3, syn)
-                      nc2.weight[0] = CHWGT
-                    else:
-                      # set up connection from source to target
-                      #nc = pc.gid_connect(j+iCA3, syn)
-                      nc2.weight[0] = CLWGT    # unlearned weight
+                    # ### Original
+                    # if (conns[i,j] == 1): # TODO access the correct column
+                    #   # set up connection from source to target
+                    #   #nc = pc.gid_connect(j+iCA3, syn)
+                    #   nc2.weight[0] = CHWGT
+                    # else:
+                    #   # set up connection from source to target
+                    #   #nc = pc.gid_connect(j+iCA3, syn)
+                    #   nc2.weight[0] = CLWGT    # unlearned weight
 
 ###NMDA ###1e3
-                    # if (conns[i,j] == 1) and cell.CREBcell == False: # TODO access the correct column
-                    #     # set up connection from source to target
-                    #     #nc = pc.gid_connect(j+iCA3, syn)
-                    #     nc2.weight[0] = CHWGT
-                    # elif (conns[i,j] == 1) and cell.CREBcell == True:
-                    #     nc2.weight[0] = CHWGT*cc.CREB.NMDA
-                    # else:
-                    #     # set up connection from source to target
-                    #     #nc = pc.gid_connect(j+iCA3, syn)
-                    #     nc2.weight[0] = CLWGT    # unlearned weight
+                    if (conns[i,j] == 1) and cell.CREBcell == False: # TODO access the correct column
+                        # set up connection from source to target
+                        #nc = pc.gid_connect(j+iCA3, syn)
+                        nc2.weight[0] = CHWGT
+                    elif (conns[i,j] == 1) and cell.CREBcell == True:
+                        nc2.weight[0] = CHWGT*cc.CREB.NMDA
+                    else:
+                        # set up connection from source to target
+                        #nc = pc.gid_connect(j+iCA3, syn)
+                        nc2.weight[0] = CLWGT    # unlearned weight
 
     return ncslist
+
+#print(cc.CREB.mAHP, cc.CREB.sAHP, cc.CREB.AMPA, cc.CREB.NMDA)
 
 # sets the CA3, EC and Septal background inputs
 def mkinputs(cells, ranlist, pop_by_name, pc): #{local i localobj stim, rs 

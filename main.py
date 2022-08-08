@@ -30,20 +30,22 @@ file_num = 0
 ### python file to send to bash script
 with open("runthis.sh",'w') as f:
     simname = 'guitar'
-    celldeath_k = [0, 0.15, 0.46, 0.65]
-    syn_death_k = [0, 0.09, 0.26, 0.35]
-    CREB_pop_i = [1, 0.5] #0, 0.2, 0.4, 0.6, 0.8, 1]
-    CREBlevel_j = [1, 0.125, 0.25, 0.50, 1, 2, 4, 8]
-    for i in range(len(CREB_pop_i)):
-        CREB_pop = CREB_pop_i[i]
-        for j in range(len(CREBlevel_j)):
-            CREBlevel = CREBlevel_j[j]
-            for k in range(len(celldeath_k)):
-                celldeath = celldeath_k[k]
-                syn_death = syn_death_k[k]
-                simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' +str(CREBlevel)
-                # file_num += 1
-                print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel}",file=f) ###{file_num}
+    celldeath_k = [0]#, 0.15, 0.46, 0.65]
+    syn_death_k = [0]#, 0.09, 0.26, 0.35]
+    CREB_pop_i = [1] #, 0, 0.2, 0.4, 0.6, 0.8, 1]
+    CREBlevel_j = [1] #, 0.125, 0.25, 0.50, 1, 2, 4, 8]
+    CREBtype_h = [2]#, 2, 3, 4]
+    for hh in range(len(CREBtype_h)):
+        CREBtype = CREBtype_h[hh]
+        for i in range(len(CREB_pop_i)):
+            CREB_pop = CREB_pop_i[i]
+            for j in range(len(CREBlevel_j)):
+                CREBlevel = CREBlevel_j[j]
+                for k in range(len(celldeath_k)):
+                    celldeath = celldeath_k[k]
+                    syn_death = syn_death_k[k]
+                    simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' + str(CREBlevel) + '_' + str(CREBtype)
+                    print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel} {CREBtype}",file=f)
     
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
@@ -71,7 +73,7 @@ plotflag = 0
 network_scale = 1 #0.2 # set to 1 for full scale or 0.2 for a quick test with a small network
 scaleEScon = 1 # #1 scaling factor for number of excitatory connections in the network, should be set to 1
 
-numCycles = 1 # set to 2 for a short test network or 8 for a full simulation
+numCycles = 8 # set to 1 or 2 for a short test network or 8 for a full simulation
 simname="guitar"
 trial_name = "Normal"
 connect_random_low_start_ = 1  # low seed for mcell_ran4_init()
@@ -100,8 +102,8 @@ if len(sys.argv)>(startlen):
                 CREB_pop = float(sys.argv[3*argadd+startlen])
                 if len(sys.argv)>(4*argadd+startlen):
                     CREBlevel = float(sys.argv[4*argadd+startlen])
-                    # if len(sys.argv)>(5*argadd+startlen):
-                    #     file_num = float(sys.argv[5*argadd+startlen])
+                    if len(sys.argv)>(5*argadd+startlen):
+                        CREBtype = float(sys.argv[5*argadd+startlen])
             #if len(sys.argv)>(2*argadd+startlen):
                 #electrostim = float(sys.argv[2*argadd+startlen])
             #if len(sys.argv)>(3*argadd+startlen):
@@ -146,7 +148,6 @@ with open('pyresults/' + simname + '.pickle', 'wb') as f:
     pickle.dump(params, f, pickle.HIGHEST_PROTOCOL)
 
 print('checkpoint1') ###checkpoint
-print(simname, celldeath, syn_death, CREB_pop, CREBlevel)
 #%%
 
 #################
@@ -205,7 +206,10 @@ pcst = pc.id()
 core_i = 0
 newcell = None
 
-
+CREBrandlist = list(range(100))
+for x in range(int(CREB_pop*100)):
+    i = random.randint(0,len(CREBrandlist)-1)
+    CREBrandlist.pop(i)
 
 for pop in poplist:
     pop_by_name[pop.popname] = pop
@@ -215,21 +219,22 @@ for pop in poplist:
     pop.core_st = int(core_i)
     coretype_i = 0
 
-#    for j in range(int(pop.num)):    # in serial, make all cells on one core
+#   for j in range(int(pop.num)):    # in serial, make all cells on one core
     for j in range(int(pop.gidst),int(pop.gidend)+1):    # in parallel, make every nth cell on one core                             
         if (pc.gid_exists(j)):
             if (pc.id()==0 and printflag>1):
                 print("newcell = cellClasses."+pop.classtype+ "(int("+str(j)+"))")
             exec("newcell = cellClasses."+pop.classtype+ "(int("+str(j)+"))")
-            CREB_rand = random.random() ###1e4 population affected by CREB
-            if CREB_rand < (1-CREB_pop) and pop.gidst == 0:
-               newcell.update_biophysics(cellClasses.noCREB, cellClasses.noCREB)
-               print("noCREB")
-               newcell.CREBcell = False
-               print(f"{j}:{CREB_rand}")
-            elif CREB_rand < (CREB_pop) and pop.gidst == 0:
+            #CREB_rand = random.random() ###1e4 population affected by CREB
+            if j in CREBrandlist:
+                newcell.update_biophysics(cellClasses.noCREB, cellClasses.noCREB)
+                print("noCREB")
+                newcell.CREBcell = False
+                #print(cellClasses.CREB.mAHP, cellClasses.CREB.sAHP, cellClasses.CREB.AMPA, cellClasses.CREB.NMDA)
+            elif pop.gidst == 0:
                 newcell.update_biophysics(cellClasses.CREB, cellClasses.CREBlevel)
                 newcell.CREBcell = True
+                #print(cellClasses.CREB.mAHP, cellClasses.CREB.sAHP, cellClasses.CREB.AMPA, cellClasses.CREB.NMDA)
             if (pop.isart==1):
                 newcell.stim.gid = int(j)
                 newcell.stim.core_i = int(core_i)

@@ -48,7 +48,7 @@ def plotresults(*args):
     plt.xlabel("Time (ms)")
     plt.ylabel("Neuron #")
     plt.title("Spike Raster")
-    plt.savefig("plots/spike_raster" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots2/spike_raster" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show() 
     
     pvsoma = np.loadtxt("{}_pvsoma.dat".format(fstem),skiprows=1)
@@ -57,7 +57,7 @@ def plotresults(*args):
     plt.xlabel("Time (ms)")
     plt.ylabel("Membrane Potential (mV)")
     plt.title("Pattern Pyramidal Cell")
-    plt.savefig("plots/pattern_pyramidal_cell" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots2/pattern_pyramidal_cell" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show()
     
     overall_performance=fig9.plot_results(params["simname"],params["netfile"],params["numCycles"],params["network_scale"])

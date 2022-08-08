@@ -130,15 +130,14 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): 
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(simname))
-    plt.savefig("plots/" + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("plots2/" + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show()
     
     print("Overall performance metric for {}: {}".format(simname,co[co>0].mean()))
-    
-    ###saves performance - doesn't work
-    # with open('performance_list.sh', 'w'):
-    #     print('')
-    #     print(co[co>0].mean())
+   
+    ###saves performance
+    with open("pyresults/summary_performance.csv", "a") as f:
+        print(simname +", " + str(co[co>0].mean()), file=f)
     
     ###saves recall quality
     df = pd.DataFrame(
@@ -147,11 +146,6 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): 
     )
     df.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\recall_quality' + str(simname) + str(time.time()) + '.csv',index=False)    
     
-    # performance_var = co[co>0].mean()
-    # if file_num == 1:
-    #     df2 = pd.DataFrame(columns = ['simname', 'performance'])
-    #     df2.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\performance' + str(simname) + str(time.time()) + '.csv',index=False)
-    # df2.append(simname, performance_var)
     
     return co[co>0].mean()
 

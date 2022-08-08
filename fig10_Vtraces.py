@@ -79,6 +79,6 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     plt.xlabel('Time (ms)');
     plt.xlim([STIME, ETIME])
     plt.ylim([VMIN, VMAX])
-    plt.savefig("plots/membrane_potential_traces" + '_' + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp\
+    plt.savefig("plots2/membrane_potential_traces" + '_' + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp\
     plt.savefig('Images/' + simname + 'v.png')
     #plt.show()
