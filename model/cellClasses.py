@@ -13,8 +13,8 @@ class CREB_class:
         self.NMDA = NMDA
 CREB = CREB_class(0.52, 0.64, 1, 1)
 noCREB = CREB_class(1, 1, 1, 1)
-CREBlevel =CREB_class(1, 1, 1, 1)
-CREBtype = 1
+CREBlevel = 1
+#CREBtype = 1
 
 keepoldtypo = 0
 
@@ -182,38 +182,38 @@ class PyramidalCell(modelcell):
         self.all.wholetree(sec=self.soma)
 
     def update_biophysics(self, CREB, CREBlevel):
-        if CREBtype == 1:
-            CREB = CREB_class(.52, .64, 1, 1)
-        elif CREBtype == 2:
-            CREB = CREB_class(1, 1, 1.622, 1)
-        elif CREBtype == 3:
-            CREB = CREB_class(1, 1, 1, 1.5)
-        elif CREBtype == 4:
-            CREB = CREB_class(.52, .64, 1.622, 1.5)
+        # if CREBtype == 1:
+        #     CREB = CREB_class(.52, .64, 1, 1)
+        # elif CREBtype == 2:
+        #     CREB = CREB_class(1, 1, 1.622, 1)
+        # elif CREBtype == 3:
+        #     CREB = CREB_class(1, 1, 1, 1.5)
+        # elif CREBtype == 4:
+        #     CREB = CREB_class(.52, .64, 1.622, 1.5)
         for seg in self.soma: 
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP ###1e1
-            seg.gkbar_mykca = 0.09075*CREB.mAHP*CREBlevel.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel ###1e1
+            seg.gkbar_mykca = 0.09075*CREB.mAHP*CREBlevel ###1e1
         for seg in self.radTprox:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel ###1e1
         for seg in self.radTmed:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel ###1e1
         for seg in self.radTdist:
-            seg.gbar_kca = 0.5*0.0001*CREB.sAHP*CREBlevel.sAHP  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 0.25*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
+            seg.gbar_kca = 0.5*0.0001*CREB.sAHP*CREBlevel  ###1e1      # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 0.25*0.0165*CREB.mAHP*CREBlevel  ###1e1
         for seg in self.oriprox1:
-             seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-             seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
+             seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+             seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel ###1e1
         for seg in self.oriprox2:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel  ###1e1
         for seg in self.oridist1:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP     ###1e1   # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel     ###1e1   # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel  ###1e1
         for seg in self.oridist2:
-            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel.sAHP    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
-            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel.mAHP  ###1e1
+            seg.gbar_kca = 5*0.0001*CREB.sAHP*CREBlevel    ###1e1    # varies depending on distance from 0.5*0.0001 to 5*0.0001
+            seg.gkbar_mykca = 2*0.0165*CREB.mAHP*CREBlevel  ###1e1
 
 
 

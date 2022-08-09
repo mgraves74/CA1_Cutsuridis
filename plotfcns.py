@@ -32,7 +32,7 @@ def plotresults(*args):
             params = a
         else:
             try:
-                with open('pyresults/' + a + '.pickle', 'rb') as f:
+                with open('pyresults/' + a + '.pickle', 'rb') as f: ###remember to change folder!!! #graph3/
                     params = pickle.load(f)
             except:
                 print('*********** Warning! ***********')
@@ -41,14 +41,14 @@ def plotresults(*args):
     for key in params:
         print(key,': ',params[key])
     
-    fstem = "pyresults/" + params["simname"]
+    fstem = "pyresults/" + params["simname"] ###edit this for each folder!!! #graph3/
     spks = np.loadtxt("{}_spt.dat".format(fstem),skiprows=1)
     plt.figure()
     plt.scatter(spks[:,0],spks[:,1],s=.1)
     plt.xlabel("Time (ms)")
     plt.ylabel("Neuron #")
     plt.title("Spike Raster")
-    plt.savefig("plots2/spike_raster" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("official_plots/spike_raster" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show() 
     
     pvsoma = np.loadtxt("{}_pvsoma.dat".format(fstem),skiprows=1)
@@ -57,7 +57,7 @@ def plotresults(*args):
     plt.xlabel("Time (ms)")
     plt.ylabel("Membrane Potential (mV)")
     plt.title("Pattern Pyramidal Cell")
-    plt.savefig("plots2/pattern_pyramidal_cell" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("official_plots/pattern_pyramidal_cell" + '_' + str(params["simname"]) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show()
     
     overall_performance=fig9.plot_results(params["simname"],params["netfile"],params["numCycles"],params["network_scale"])

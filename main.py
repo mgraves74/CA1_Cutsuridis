@@ -34,18 +34,18 @@ with open("runthis.sh",'w') as f:
     syn_death_k = [0]#, 0.09, 0.26, 0.35]
     CREB_pop_i = [1] #, 0, 0.2, 0.4, 0.6, 0.8, 1]
     CREBlevel_j = [1] #, 0.125, 0.25, 0.50, 1, 2, 4, 8]
-    CREBtype_h = [2]#, 2, 3, 4]
-    for hh in range(len(CREBtype_h)):
-        CREBtype = CREBtype_h[hh]
-        for i in range(len(CREB_pop_i)):
-            CREB_pop = CREB_pop_i[i]
-            for j in range(len(CREBlevel_j)):
-                CREBlevel = CREBlevel_j[j]
-                for k in range(len(celldeath_k)):
-                    celldeath = celldeath_k[k]
-                    syn_death = syn_death_k[k]
-                    simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' + str(CREBlevel) + '_' + str(CREBtype)
-                    print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel} {CREBtype}",file=f)
+    # CREBtype_h = [1, 2, 3, 4]
+    # for hh in range(len(CREBtype_h)):
+    #     CREBtype = CREBtype_h[hh]
+    for i in range(len(CREB_pop_i)):
+        CREB_pop = CREB_pop_i[i]
+        for j in range(len(CREBlevel_j)):
+            CREBlevel = CREBlevel_j[j]
+            for k in range(len(celldeath_k)):
+                celldeath = celldeath_k[k]
+                syn_death = syn_death_k[k]
+                simname = 'guitar' + '_' + str(syn_death) + '_' + str(celldeath) + '_' + str(CREB_pop) + '_' + str(CREBlevel) #+ '_' + str(CREBtype)
+                print(f"python main.py {simname} {celldeath} {syn_death} {CREB_pop} {CREBlevel}",file=f) #{CREBtype}
     
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
@@ -102,16 +102,18 @@ if len(sys.argv)>(startlen):
                 CREB_pop = float(sys.argv[3*argadd+startlen])
                 if len(sys.argv)>(4*argadd+startlen):
                     CREBlevel = float(sys.argv[4*argadd+startlen])
-                    if len(sys.argv)>(5*argadd+startlen):
-                        CREBtype = float(sys.argv[5*argadd+startlen])
+                    # if len(sys.argv)>(5*argadd+startlen):
+                    #     CREBtype = float(sys.argv[5*argadd+startlen])
             #if len(sys.argv)>(2*argadd+startlen):
                 #electrostim = float(sys.argv[2*argadd+startlen])
             #if len(sys.argv)>(3*argadd+startlen):
                     #numCycles = int(sys.argv[3*argadd+startlen])
                     #if len(sys.argv)>(4*argadd+startlen):
                         #connect_random_low_start_ = float(sys.argv[4*argadd+startlen])    
-                        
-                        
+            
+cellClasses.CREBlevel = CREBlevel #which side is which matters a lot
+# cellClasses.CREBtype = CREBtype #so I imported CREBtype from cellClasses but then made CREBtype which are different. Unless I do this, the CREBtype in cellClasses (which is cellClasses.CREBtype) won't be altered when update_biophysics() is called later
+
 rmchars=['"',"'","\\"," "]
 
 for i in rmchars:

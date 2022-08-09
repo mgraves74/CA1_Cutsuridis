@@ -32,7 +32,7 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): 
     patts = np.loadtxt(FPATT)   # load stored patterns
     cue = patts[:,CPATT]   # extract cue pattern
     
-    FSPIKE = r'pyresults/{}_spt.dat'.format(simname)   # spikes file
+    FSPIKE = r'pyresults/{}_spt.dat'.format(simname) #graph3/  # spikes file ###again change the folder (for pc spyder it gets saved in pyresults not the folder)
     sp = np.loadtxt(FSPIKE,skiprows=1)  # load spike times
     st = sp[:,0]       # extract times
     cell = sp[:,1]     # extract corresponding cell indices
@@ -130,7 +130,7 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): 
     plt.ylim([0, 1.02])
     
     plt.savefig("Images/{}.png".format(simname))
-    plt.savefig("plots2/" + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
+    plt.savefig("official_plots/" + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp
     #plt.show()
     
     print("Overall performance metric for {}: {}".format(simname,co[co>0].mean()))
@@ -140,11 +140,11 @@ def plot_results(simname,netfile='N100S20P5',NUMCYCLES=numCycles, scaleDown=1): 
         print(simname +", " + str(co[co>0].mean()), file=f)
     
     ###saves recall quality
-    df = pd.DataFrame(
-        {'time':ti, 
-         'recall':co.flatten()}
-    )
-    df.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\recall_quality' + str(simname) + str(time.time()) + '.csv',index=False)    
+    # df = pd.DataFrame(
+    #     {'time':ti, 
+    #      'recall':co.flatten()}
+    # )
+    # df.to_csv('C:\\Users\\mgrav\\OneDrive\\Documents\\GitHub\\CA1_Cutsuridis\\pyresults\\recall_quality' + str(simname) + str(time.time()) + '.csv',index=False)    
     
     
     return co[co>0].mean()

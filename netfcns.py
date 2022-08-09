@@ -21,21 +21,20 @@ cuelist = []
 # Initialize the spikeraster
 tvec = h.Vector()
 idvec = h.Vector()
-
-if cc.CREBtype == 1:
-    cc.CREB = cc.CREB_class(.52, .64, 1, 1)
-elif cc.CREBtype == 2:
-    cc.CREB = cc.CREB_class(1, 1, 1.622, 1)
-elif cc.CREBtype == 3:
-    cc.CREB = cc.CREB_class(1, 1, 1, 1.5)
-elif cc.CREBtype == 4:
-    cc.CREB = cc.CREB_class(.52, .64, 1.622, 1.5)
     
 #print(cc.CREB.mAHP, cc.CREB.sAHP, cc.CREB.AMPA, cc.CREB.NMDA)
     
 def connectcells(cells, ranlist, nclist, pop_by_name, post_type, pre_type, synstart, synend,npresyn,weight,delay, pc, syn_death): # {local i, j, gid, nsyn, r  localobj syn, nc, rs, u
     # initialize the pseudorandom number generator
     ctcons=0
+    # if cc.CREBtype == 1:
+    #     cc.CREB = cc.CREB_class(.52, .64, 1, 1)
+    # elif cc.CREBtype == 2:
+    #     cc.CREB = cc.CREB_class(1, 1, 1.622, 1)
+    # elif cc.CREBtype == 3:
+    #     cc.CREB = cc.CREB_class(1, 1, 1, 1.5)
+    # elif cc.CREBtype == 4:
+    #     cc.CREB = cc.CREB_class(.52, .64, 1.622, 1.5)
     for i in range(pop_by_name[post_type].core_st,pop_by_name[post_type].core_en+1):
         cell = cells[i]
         rs = ranlist[i]  # RandomStream for cells.object(i)
@@ -89,7 +88,14 @@ def connectEC(FPATT, ECPATT, NPATT, synstart, numsyn, cells, pop_by_name, pc, sy
     if (pc.id()==0 and cue.shape != (ECPATT, NPATT) and printflag>1):
         print("The cue data is a different shape than expected:", cue.shape)
 
-
+    if cc.CREBtype == 1:
+        cc.CREB = cc.CREB_class(.52, .64, 1, 1)
+    elif cc.CREBtype == 2:
+        cc.CREB = cc.CREB_class(1, 1, 1.622, 1)
+    elif cc.CREBtype == 3:
+        cc.CREB = cc.CREB_class(1, 1, 1, 1.5)
+    elif cc.CREBtype == 4:
+        cc.CREB = cc.CREB_class(.52, .64, 1.622, 1.5)
     # find active cells in pattern
     for i in range(len(cue)):
         ##if (!pc.gid_exists(i+iPC)) { continue }
@@ -160,7 +166,14 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
             # open connections file
             # read incoming weights for cell gid
             conns = np.loadtxt(fname = FCONN)
-    
+            if cc.CREBtype == 1:
+                cc.CREB = cc.CREB_class(.52, .64, 1, 1)
+            elif cc.CREBtype == 2:
+                cc.CREB = cc.CREB_class(1, 1, 1.622, 1)
+            elif cc.CREBtype == 3:
+                cc.CREB = cc.CREB_class(1, 1, 1, 1.5)
+            elif cc.CREBtype == 4:
+                cc.CREB = cc.CREB_class(.52, .64, 1.622, 1.5)
             for j in range(int(pop_by_name["CA3Cell"].num)):
                 #for j=0, CA3_PC-1 { # You might need something like this line instead so that it doesn't error out if you are only planning to make a scaled down number of synapses
                 # only connection if physical connection exists
@@ -205,7 +218,7 @@ def connectCA3(FCONN, C_P, EM_CA3, EN_CA3, cells, pop_by_name, connect_random_lo
                         #nc = pc.gid_connect(j+iCA3, syn)
                         nc2.weight[0] = CHWGT
                     elif (conns[i,j] == 1) and cell.CREBcell == True:
-                        nc2.weight[0] = CHWGT*cc.CREB.NMDA
+                        nc2.weight[0] = CHWGT*cc.CREB.NMDA ###no CREBlevel here
                     else:
                         # set up connection from source to target
                         #nc = pc.gid_connect(j+iCA3, syn)

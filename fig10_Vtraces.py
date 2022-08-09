@@ -24,7 +24,7 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     VMAX = 50
     
     plt.subplot(nr,1,1);
-    FV = 'pyresults/'+ simname +  '_pvsoma.dat'   # voltage file
+    FV = 'pyresults/'+ simname +  '_pvsoma.dat'  #graph3/ # voltage file ### remember to change folder
     v = np.loadtxt(FV)  # load spike times
     t = np.arange(0,ETIME+dt,dt)       # extract times
     plt.plot(t, v, 'k-');   # voltage trace
@@ -36,7 +36,7 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     ax.axes.xaxis.set_ticklabels([])
     
     plt.subplot(nr,1,2);
-    FV = 'pyresults/'+ simname +  '_vAAC.dat'   # voltage file
+    FV = 'pyresults/'+ simname +  '_vAAC.dat'  #graph3/ # voltage file ### remember to change folder
     v = np.loadtxt(FV)  # load spike times
     t = np.arange(0,ETIME+dt,dt)       # extract times
     plt.plot(t, v, 'k-');   # voltage trace
@@ -47,7 +47,7 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     ax1.axes.xaxis.set_ticklabels([])
     
     plt.subplot(nr,1,3);
-    FV = 'pyresults/'+ simname +  '_vBC.dat'   # voltage file
+    FV = 'pyresults/'+ simname +  '_vBC.dat'  #graph3/ # voltage file ### remember to change folder
     v = np.loadtxt(FV)  # load spike times
     t = np.arange(0,ETIME+dt,dt)       # extract times
     plt.plot(t, v, 'k-');   # voltage trace
@@ -59,7 +59,7 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     
     
     plt.subplot(nr,1,4);
-    FV = 'pyresults/'+ simname +  '_vBSC.dat'   # voltage file
+    FV = 'pyresults/'+ simname +  '_vBSC.dat'  #graph3/ # voltage file ### remember to change folder
     v = np.loadtxt(FV)  # load spike times
     t = np.arange(0,ETIME+dt,dt)       # extract times
     plt.plot(t, v, 'k-');   # voltage trace
@@ -71,7 +71,7 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     
     
     plt.subplot(nr,1,5);
-    FV = 'pyresults/'+ simname +  '_vOLM.dat'   # voltage file
+    FV = 'pyresults/'+ simname +  '_vOLM.dat'  #graph3/ # voltage file ### remember to change folder
     v = np.loadtxt(FV)  # load spike times
     t = np.arange(0,ETIME+dt,dt)       # extract times
     plt.plot(t, v, 'k-');   # voltage trace
@@ -79,6 +79,6 @@ def plot_voltages(simname = 'par', STIME = 200, ETIME = 2050, dt=.025):
     plt.xlabel('Time (ms)');
     plt.xlim([STIME, ETIME])
     plt.ylim([VMIN, VMAX])
-    plt.savefig("plots2/membrane_potential_traces" + '_' + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp\
+    plt.savefig("official_plots/membrane_potential_traces" + '_' + str(simname) + '_' + str(time.time()) + ".png") #ANDY - saved plot in folder, marked with timestamp\
     plt.savefig('Images/' + simname + 'v.png')
     #plt.show()
